@@ -36,7 +36,6 @@ public class CsvReader {
 
   private FlatFileItemReader<User> singleFileReader() {
     CustomFlatFileItemReader<User> reader = new CustomFlatFileItemReader<>();
-    reader.getFileName();
     reader.setName("csvReader");
     reader.setLinesToSkip(1);
     reader.setEncoding(StandardCharsets.UTF_8.name());
