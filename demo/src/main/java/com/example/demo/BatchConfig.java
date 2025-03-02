@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.io.IOException;
+import java.io.PrintStream;
 
 @Configuration
 public class BatchConfig {
@@ -30,12 +31,14 @@ public class BatchConfig {
             .<User, User>chunk(10, transactionManager)
             .reader(reader.read())
             .processor(processor)
-            .writer(items -> {})
+            .writer(items -> {
+            })
             .build();
   }
 
   @Bean
   public Job demoJob(final JobRepository jobRepository, final PlatformTransactionManager transactionManager) throws Exception {
+    System.setOut(new PrintStream(System.out, true, "UTF-8"));
     return new JobBuilder("demoJob", jobRepository)
             .incrementer(new RunIdIncrementer())
             .start(demoStep(jobRepository, transactionManager))
