@@ -5,7 +5,9 @@ import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.MultiResourceItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
+import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
+import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.Resource;
@@ -33,16 +35,18 @@ public class CsvReader {
   }
 
   private FlatFileItemReader<User> singleFileReader() {
-    final String[] nameArray = new String[]{"id", "name"};
-    return new FlatFileItemReaderBuilder<User>()
-            .name("csvReader")
-            .linesToSkip(1)
-            .encoding(StandardCharsets.UTF_8.name())
-            .delimited()
-            .names(nameArray)
-            .fieldSetMapper(new CustomFieldSetMapper()) // カスタム FieldSetMapper
-            .build();
-
+    CustomFlatFileItemReader<User> reader = new CustomFlatFileItemReader<>();
+    reader.getFileName();
+    reader.setName("csvReader");
+    reader.setLinesToSkip(1);
+    reader.setEncoding(StandardCharsets.UTF_8.name());
+    reader.setLineMapper(new DefaultLineMapper<User>() {{
+      setLineTokenizer(new DelimitedLineTokenizer() {{
+        setNames("id", "name");
+      }});
+      setFieldSetMapper(new CustomFieldSetMapper());
+    }});
+    return reader;
   }
 
   private static class CustomFieldSetMapper implements FieldSetMapper<User> {
