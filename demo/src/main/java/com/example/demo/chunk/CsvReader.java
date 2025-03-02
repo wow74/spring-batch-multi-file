@@ -7,7 +7,6 @@ import org.springframework.batch.item.file.MultiResourceItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
@@ -16,17 +15,16 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 @Component
-@PropertySource("classpath:property/demo.properties")
 public class CsvReader {
 
-  public Resource[] getCsvFilesFromResources() throws IOException {
+  private Resource[] getCsvFiles() throws IOException {
     return new PathMatchingResourcePatternResolver().getResources("classpath:csv/*.csv");
   }
 
   @StepScope
   public MultiResourceItemReader<User> read() throws IOException {
     final MultiResourceItemReader<User> multiReader = new MultiResourceItemReader<>();
-    multiReader.setResources(getCsvFilesFromResources());
+    multiReader.setResources(getCsvFiles());
     multiReader.setDelegate(singleFileReader());
 
     return multiReader;
