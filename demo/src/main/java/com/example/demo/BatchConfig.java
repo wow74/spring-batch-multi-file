@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import java.io.IOException;
+
 @Configuration
 public class BatchConfig {
 
@@ -23,7 +25,7 @@ public class BatchConfig {
   @Autowired
   private CsvProcessor processor;
 
-  private Step demoStep(final JobRepository jobRepository, final PlatformTransactionManager transactionManager) {
+  private Step demoStep(final JobRepository jobRepository, final PlatformTransactionManager transactionManager) throws IOException {
     return new StepBuilder("demoStep", jobRepository)
             .<User, User>chunk(10, transactionManager)
             .reader(reader.read())
