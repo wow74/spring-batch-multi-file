@@ -1,6 +1,8 @@
 package com.example.demo;
 
-import com.example.demo.tasklet.HelloTasklet;
+import com.example.demo.chunk.CsvProcessor;
+import com.example.demo.chunk.CsvReader;
+import com.example.demo.model.User;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -16,20 +18,25 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class BatchConfig {
 
   @Autowired
-  private HelloTasklet helloTasklet;
+  private CsvReader reader;
 
-  @Bean
-  public Step sampleStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-    return new StepBuilder("HelloStep", jobRepository)
-            .tasklet(helloTasklet, transactionManager)
+  @Autowired
+  private CsvProcessor processor;
+
+  private Step demoStep(final JobRepository jobRepository, final PlatformTransactionManager transactionManager) {
+    return new StepBuilder("demoStep", jobRepository)
+            .<User, User>chunk(10, transactionManager)
+            .reader(reader.read())
+            .processor(processor)
+            .writer(items -> {})
             .build();
   }
 
   @Bean
-  public Job sampleJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws Exception {
-    return new JobBuilder("HelloJob", jobRepository)
+  public Job demoJob(final JobRepository jobRepository, final PlatformTransactionManager transactionManager) throws Exception {
+    return new JobBuilder("demoJob", jobRepository)
             .incrementer(new RunIdIncrementer())
-            .start(sampleStep(jobRepository, transactionManager))
+            .start(demoStep(jobRepository, transactionManager))
             .build();
   }
 }
