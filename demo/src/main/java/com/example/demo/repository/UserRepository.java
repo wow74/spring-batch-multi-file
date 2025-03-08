@@ -6,9 +6,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class UserRepository implements UserMapper {
+public class UserRepository {
 
-  @Override
   public int dummyBulkInsert(List<User> user) {
     // 実際のインサート処理を記述する
     return user.size();
