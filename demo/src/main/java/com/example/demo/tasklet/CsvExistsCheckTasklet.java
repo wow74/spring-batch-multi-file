@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Objects;
 
 @Component
 @StepScope
@@ -20,7 +19,7 @@ public class CsvExistsCheckTasklet implements Tasklet {
   @Override
   public RepeatStatus execute(StepContribution stepContribution, ChunkContext context) throws IOException {
     final Resource[] resources = new PathMatchingResourcePatternResolver().getResources("classpath:csv/*.csv");
-    if (Objects.isNull(resources)) throw new FileNotFoundException("csvファイルが見つかりませんでした");
+    if (resources.length == 0) throw new FileNotFoundException("csvファイルが見つかりませんでした");
     return RepeatStatus.FINISHED;
   }
 }
