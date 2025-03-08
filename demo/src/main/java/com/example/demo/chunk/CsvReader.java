@@ -22,6 +22,7 @@ public class CsvReader {
 
   @StepScope
   public MultiResourceItemReader<User> read() throws IOException {
+    System.out.println("read");
     final MultiResourceItemReader<User> multiReader = new MultiResourceItemReader<>();
     multiReader.setResources(getCsvFiles());
     multiReader.setDelegate(singleFileReader());
