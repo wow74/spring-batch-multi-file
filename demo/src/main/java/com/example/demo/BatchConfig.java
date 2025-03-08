@@ -4,7 +4,7 @@ import com.example.demo.chunk.CsvProcessor;
 import com.example.demo.chunk.CsvReader;
 import com.example.demo.chunk.CsvWriter;
 import com.example.demo.model.User;
-import com.example.demo.tasklet.CsvExistsCheckTasklet;
+import com.example.demo.tasklet.CsvExistsCheckTasklet1;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -23,7 +23,7 @@ import java.io.PrintStream;
 public class BatchConfig {
 
   @Autowired
-  private CsvExistsCheckTasklet tasklet;
+  private CsvExistsCheckTasklet1 tasklet;
 
   @Autowired
   private CsvReader reader;
