@@ -14,7 +14,8 @@ public class CsvProcessor implements ItemProcessor<User, User> {
   @Override
   public User process(final User item) throws Exception {
     try {
-      System.out.println("demo");
+      System.out.println("process");
+      item.setName(item.getName() + "さん");
       System.out.println(item.toString());
     } catch (Exception e) {
       log.warn(e.getMessage(), e);
