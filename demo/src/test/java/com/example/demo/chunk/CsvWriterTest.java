@@ -30,8 +30,6 @@ public class CsvWriterTest {
   @Mock
   private UserRepository userRepository;
 
-  private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-
   @BeforeAll
   public static void beginTest() {
     log.info("CsvWriterTest 開始");

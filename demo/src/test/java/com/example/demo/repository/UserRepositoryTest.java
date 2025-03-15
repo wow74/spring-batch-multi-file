@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 @SpringBootTest // RepositoryはBatch機能ではないためSpringBootTestアノテーションを使用
 @Slf4j
 @DisplayName("UserRepositoryTest")
+@Transactional
 class UserRepositoryTest {
 
   @Autowired
@@ -35,7 +36,6 @@ class UserRepositoryTest {
   }
 
   @Test
-  @Transactional
   @DisplayName("dummyBulkInsertTest")
   public void dummyBulkInsertTest() {
     // SETUP
