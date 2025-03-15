@@ -8,19 +8,24 @@ import com.example.demo.tasklet.CsvExistsCheckTasklet1;
 import com.example.demo.tasklet.CsvExistsCheckTasklet2;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.file.MultiResourceItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.io.IOException;
 import java.io.PrintStream;
 
 @Configuration
+@PropertySource("classpath:property/demo.properties")
 public class BatchConfig {
 
   @Autowired
@@ -36,6 +41,12 @@ public class BatchConfig {
   private CsvWriter writer;
 
   @Bean
+  @StepScope
+  public MultiResourceItemReader<User> read(@Value("${csv.file.path}") final String filePath) throws IOException {
+    return reader.read(filePath);
+  }
+
+  @Bean
   public Step fileCheckStep(final JobRepository jobRepository, final PlatformTransactionManager transactionManager) {
     return new StepBuilder("fileCheckStep", jobRepository)
             .tasklet(tasklet, transactionManager)
@@ -43,10 +54,12 @@ public class BatchConfig {
   }
 
   @Bean
-  public Step demoStep(final JobRepository jobRepository, final PlatformTransactionManager transactionManager) throws IOException {
+  public Step demoStep(final JobRepository jobRepository, final PlatformTransactionManager transactionManager, final MultiResourceItemReader<User> read) throws IOException {
+    System.out.println("step");
     return new StepBuilder("demoStep", jobRepository)
             .<User, User>chunk(10, transactionManager)
-            .reader(reader.read())
+//            .reader(read(null)) // 引数でreadをDIしない場合はこちらを使用する
+            .reader(read)
             .processor(processor)
             .writer(writer)
             .build();
@@ -55,6 +68,7 @@ public class BatchConfig {
   @Bean
   public Job demoJob(final JobRepository jobRepository, final PlatformTransactionManager transactionManager,
                      final Step fileCheckStep, final Step demoStep) throws Exception {
+    System.out.println("job");
     System.setOut(new PrintStream(System.out, true, "UTF-8"));
     return new JobBuilder("demoJob", jobRepository)
             .incrementer(new RunIdIncrementer())

@@ -24,6 +24,7 @@ public class CsvExistsCheckTasklet2 implements Tasklet {
 
   @Override
   public RepeatStatus execute(StepContribution stepContribution, ChunkContext context) throws IOException {
+    System.out.println("tasklet2");
     final Resource[] resources = new PathMatchingResourcePatternResolver().getResources(filePath);
     if (resources.length == 0) throw new FileNotFoundException("csvファイルが見つかりませんでした");
     return RepeatStatus.FINISHED;
