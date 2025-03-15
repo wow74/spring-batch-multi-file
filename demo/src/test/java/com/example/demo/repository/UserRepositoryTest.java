@@ -15,7 +15,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
-// @SpringBatchTest // SpringBatchの機能(Tasklet, Chunkなど)をテストするときに使うアノテーション
+// @SpringBatchTest // SpringBatchの機能(Job, Step)をテストするときに使うアノテーション
 @SpringBootTest // RepositoryはBatch機能ではないためSpringBootTestアノテーションを使用
 @Slf4j
 @DisplayName("UserRepositoryTest")

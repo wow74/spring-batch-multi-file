@@ -2,12 +2,14 @@ package com.example.demo.chunk;
 
 import com.example.demo.model.User;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.item.file.MultiResourceItemReader;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -30,11 +32,6 @@ public class CsvReaderTest {
     log.info("CsvReaderTest 終了");
   }
 
-  @BeforeEach
-  public void setup() {
-    ReflectionTestUtils.setField(csvReader, "filePath", "classpath:test/csv/*.csv", String.class);
-  }
-
   @Test
   @DisplayName("readTest")
   public void readTest() throws Exception {
@@ -47,7 +44,7 @@ public class CsvReaderTest {
     };
 
     // WHEN
-    final MultiResourceItemReader<User> reader = csvReader.read();
+    final MultiResourceItemReader<User> reader = csvReader.read("classpath:test/csv/*.csv");
 
     assertEquals(expectedArray[0], reader.read());
     assertEquals(expectedArray[1], reader.read());
